@@ -6,7 +6,7 @@ The purpose of this project is to develop a linear regression machine learning a
 1. Predict the price of a Magic: The Gathering card given a particular date,
 2. Given the parameters of a hypothetical MTG card what will the initial release cost of it be.
 
-The model will start simple, though ultimately the variables included will be: 
+The model will start simple, the variables included will be: 
 
 * Price history
 * Card name
@@ -27,4 +27,8 @@ These are just the basic attributes of an MTG card and will be the starting poin
 * Published deck list card is included in
 * Number of mentions the card gets in community forums
 * What formats the card is legal in
+* If it is foil
 
+## Data formatting
+
+The website Scryfall has APIs available to access the necessary data. 
