@@ -38,6 +38,10 @@ def preprocess_targets(mtg_cards):
     return output_target
 
 training_examples = preprocess_features(mtg_cards.head(100))
+training_targets = preprocess_targets(mtg_cards.head(100))
+
+validation_examples = preprocess_features(mtg_cards.tail(75))
+validation_targets = preprocess_targets(mtg_cards.tail(75))
 
 ## Plotting data
 plt.figure(figsize=(13,8))
@@ -47,5 +51,7 @@ ax.set_title("Training Data")
 ax.set_xlim([0,10])
 plt.scatter(training_examples['usd_price'],
             training_examples['rarity'],
-            cmap='coolwarm')
+            cmap='coolwarm',
+            c=training_targets['usd_price']/10)
 _ = plt.plot()
+
