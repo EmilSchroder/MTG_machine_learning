@@ -68,7 +68,7 @@ def my_input_fn(features, targets, batch_size=1, shuffle=True, num_epochs=None):
 
 def construct_feature_columns(input_features):
     return tf.feature_column.categorical_column_with_vocabulary_list(
-            key = input_features,
+            key = 'rarity',
             vocabulary_list=['C','U','R','M'])
     
 def train_model(learning_rate,
