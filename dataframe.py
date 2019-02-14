@@ -3,9 +3,6 @@ from __future__ import print_function
 import math
 
 import pandas as pd
-from IPython import display
-from matplotlib import cm
-from matplotlib import gridspec
 from matplotlib import pyplot as plt
 import numpy as np
 from sklearn import metrics
@@ -16,8 +13,7 @@ tf.logging.set_verbosity(tf.logging.ERROR)
 pd.options.display.max_rows = 10
 
 ## Need to construct more representative dataset
-mtg_cards = pd.read_csv('http://api.scryfall.com/cards/search?q=cmc:4&format=csv', sep=",")
-mtg_cards.fillna(0.0)
+mtg_cards = pd.read_csv('./mtg_card_data.csv', sep=",")
 ## Randomisation is good proceedure
 mtg_cards = mtg_cards.reindex(np.random.permutation(mtg_cards.index))
 
@@ -131,6 +127,8 @@ def train_model(learning_rate,
         
         
         # Compute training and validation loss.
+       # print("training predictions", training_predictions)
+        #print("training targets", training_targets)
         training_root_mean_squared_error = math.sqrt(
             metrics.mean_squared_error(training_predictions, training_targets))
         validation_root_mean_squared_error = math.sqrt(
@@ -140,8 +138,8 @@ def train_model(learning_rate,
         # Add the loss metrics from this period to our list.
         training_rmse.append(training_root_mean_squared_error)
         validation_rmse.append(validation_root_mean_squared_error)
-        print("Model training finished.")
+    print("Model training finished.")
   
-    return linear_regressor
+    return
 
-tf.app.run(train_model(0.1, 10, 1, training_examples, training_targets, validation_examples, validation_targets))
+tf.app.run(train_model(0.05, 100, 1, training_examples, training_targets, validation_examples, validation_targets))
