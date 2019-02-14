@@ -17,22 +17,23 @@ pd.options.display.max_rows = 10
 
 ## Need to construct more representative dataset
 mtg_cards = pd.read_csv('http://api.scryfall.com/cards/search?q=cmc:4&format=csv', sep=",")
-
+mtg_cards.fillna(0.0)
 ## Randomisation is good proceedure
 mtg_cards = mtg_cards.reindex(np.random.permutation(mtg_cards.index))
 
 
 def preprocess_features(mtg_cards):
     
-    selected_features = mtg_cards["rarity"]
-            
-    return selected_features
+    selected_features = mtg_cards[["rarity"]]
+    processed_features = selected_features.copy()
+         
+    return processed_features
 
 def preprocess_targets(mtg_cards):
     output_target = pd.DataFrame()
     
     output_target["usd_price"] = mtg_cards["usd_price"]
-    print('output tartget', output_target)
+    
     return output_target
 
 training_examples = preprocess_features(mtg_cards.head(100))
@@ -42,16 +43,16 @@ validation_examples = preprocess_features(mtg_cards.tail(75))
 validation_targets = preprocess_targets(mtg_cards.tail(75))
 
 ## Plotting data
-## plt.figure(figsize=(13,8))
+plt.figure(figsize=(13,8))
 
-## ax = plt.subplot(1,2,1)
-## ax.set_title("Training Data")
-## ax.set_xlim([0,10])
-## plt.scatter(training_examples['usd_price'],
-            ## training_examples['rarity'],
-           ##  cmap='coolwarm',
-            ## c=training_targets['usd_price']/10)
-##_ = plt.plot()
+ax = plt.subplot(1,2,1)
+ax.set_title("Training Data")
+ax.set_xlim([0,10])
+plt.scatter(training_targets['usd_price'],
+             training_examples['rarity'],
+             cmap='coolwarm',
+             c=training_targets['usd_price']/10)
+_ = plt.plot()
 
 def my_input_fn(features, targets, batch_size=1, shuffle=True, num_epochs=None):
     
