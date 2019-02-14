@@ -16,7 +16,7 @@ tf.logging.set_verbosity(tf.logging.ERROR)
 pd.options.display.max_rows = 10
 
 ## Need to construct more representative dataset
-mtg_cards = pd.read_csv('http://api.scryfall.com/cards/search?q=cmc:4&format=csv')
+mtg_cards = pd.read_csv('http://api.scryfall.com/cards/search?q=cmc:4&format=csv', sep=",")
 
 ## Randomisation is good proceedure
 mtg_cards = mtg_cards.reindex(np.random.permutation(mtg_cards.index))
@@ -24,9 +24,7 @@ mtg_cards = mtg_cards.reindex(np.random.permutation(mtg_cards.index))
 
 def preprocess_features(mtg_cards):
     
-    selected_features = mtg_cards[
-            "rarity"
-            ]
+    selected_features = mtg_cards["rarity"]
             
     return selected_features
 
@@ -34,6 +32,7 @@ def preprocess_targets(mtg_cards):
     output_target = pd.DataFrame()
     
     output_target["usd_price"] = mtg_cards["usd_price"]
+    print('output tartget', output_target)
     return output_target
 
 training_examples = preprocess_features(mtg_cards.head(100))
@@ -55,9 +54,11 @@ validation_targets = preprocess_targets(mtg_cards.tail(75))
 ##_ = plt.plot()
 
 def my_input_fn(features, targets, batch_size=1, shuffle=True, num_epochs=None):
+    
     features = {key:np.array(value) for key,value in dict(features).items()}
 
-    ds = Dataset.from_tensor_slices((features,targets))
+
+    ds = Dataset.from_tensor_slices((features, targets))
     ds = ds.batch(batch_size).repeat(num_epochs)
     
     if shuffle:
@@ -66,10 +67,15 @@ def my_input_fn(features, targets, batch_size=1, shuffle=True, num_epochs=None):
     features, labels = ds.make_one_shot_iterator().get_next()
     return features, labels
 
-def construct_feature_columns(input_features):
-    return tf.feature_column.categorical_column_with_vocabulary_list(
+##Set up the categorical feature column for rarity
+    
+vocab_list = ['C','U','R','M']
+    
+feature_column = [tf.feature_column.categorical_column_with_vocabulary_list(
             key = 'rarity',
-            vocabulary_list=['C','U','R','M'])
+            vocabulary_list=vocab_list)]
+
+
     
 def train_model(learning_rate,
                 steps,
@@ -86,12 +92,12 @@ def train_model(learning_rate,
     my_optimiser = tf.train.GradientDescentOptimizer(learning_rate=learning_rate)
     
     linear_regressor = tf.estimator.LinearRegressor(
-            feature_columns=construct_feature_columns(training_examples),
+            feature_columns=feature_column,
             optimizer=my_optimiser
             )
     
 
-    training_input_fn = lambda: my_input_fn(training_examples,training_targets["usd_price"],batch_size=batch_size)
+    training_input_fn = lambda: my_input_fn(training_examples, training_targets["usd_price"], batch_size=batch_size)
     
     predict_training_input_fn = lambda: my_input_fn(
           training_examples, 
@@ -137,3 +143,4 @@ def train_model(learning_rate,
   
     return linear_regressor
 
+tf.app.run(train_model(0.1, 10, 1, training_examples, training_targets, validation_examples, validation_targets))
