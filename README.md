@@ -21,9 +21,9 @@ Hack together some data to be processed by a simple model. This will create a te
 The features below are what we want our linear regressor to be making it's assessment on, but before the code can be written the data needs to be gathered, validated and cleaned. API calls to Scryfall and MTG official will return JSON data which will need to be collated and written into csv format.
 
 * Current Date
-* Price history
 * Card name
 * Mana cost
+* Converted mana cost
 * Type
 * Subtype(s)
 * Attributes / Abilities
@@ -41,6 +41,7 @@ These are just the basic attributes of an MTG card and will be the starting poin
 * Number of mentions the card gets in community forums
 * What formats the card is legal in
 * If it is foil
+* Price history
 
 ### Step 3
 > Incorporate new features into current model
