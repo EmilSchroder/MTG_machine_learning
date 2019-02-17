@@ -38,6 +38,15 @@ let jsonKeys = Object.keys(data)
 let revisedData = []
 
 jsonKeys.map(key => {
+    let newDataFormat = {}
+    newDataFormat.name = data[key]['name']
+    newDataFormat.manaCost = data[key]['manaCost']
+    newDataFormat.CMC = data[key]['convertedManaCost']
+    newDataFormat.types = data[key]['types']
+    newDataFormat.subtypes = data[key]['subtypes']
+    newDataFormat.power = data[key]['power']
+    newDataFormat.toughness = data[key]['toughness']
+    newDataFormat.printings = data[key]['printings']
 
-    console.log(data[key]['type'])
+    console.log(newDataFormat)
 })
