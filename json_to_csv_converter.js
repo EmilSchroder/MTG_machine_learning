@@ -44,9 +44,10 @@ jsonKeys.map(key => {
     newDataFormat.CMC = data[key]['convertedManaCost']
     newDataFormat.types = data[key]['types']
     newDataFormat.subtypes = data[key]['subtypes']
-    newDataFormat.power = data[key]['power']
-    newDataFormat.toughness = data[key]['toughness']
+    newDataFormat.power = data[key]['power'] || ''
+    newDataFormat.toughness = data[key]['toughness'] || ''
     newDataFormat.printings = data[key]['printings']
 
-    console.log(newDataFormat)
+    revisedData.push(newDataFormat)
+    console.log(revisedData)
 })
